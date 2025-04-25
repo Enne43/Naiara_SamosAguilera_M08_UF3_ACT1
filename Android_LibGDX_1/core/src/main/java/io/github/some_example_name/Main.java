@@ -38,19 +38,19 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(8, 5);
 
         // Cargamos las variables con nuestras imágenes y sonido deseados.
-        bucketTexture = new Texture("libgdx.png");
+        bucketTexture = new Texture("ace.png");
         backgroundTexture = new Texture("libgdx.png");
-        dropTexture = new Texture("libgdx.png");
+        dropTexture = new Texture("mera_mera_no_mi.png");
 
         bucketSprite = new Sprite(bucketTexture);
         bucketSprite.setSize(1, 1);
 
-        /*dropSound = Gdx.audio.newSound(Gdx.files.internal(".mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal(".mp3"));
+        dropSound = Gdx.audio.newSound(Gdx.files.internal("dropping_books.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("ado_new_genesis_uta.mp3"));
         music.setLooping(true);
         music.setVolume(.5f);
         music.play();
-        */
+
         touchPos = new Vector2();
         dropSprites = new Array<>();
 
