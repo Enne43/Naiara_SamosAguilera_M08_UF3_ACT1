@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -28,9 +29,13 @@ public class Main extends ApplicationAdapter {
     Sprite bucketSprite;
     Vector2 touchPos;
     Array<Sprite> dropSprites;
-    float dropTimer;
     Rectangle bucketRectangle;
     Rectangle dropRectangle;
+    BitmapFont scoreText;
+    float dropTimer;
+    int points;
+
+
 
     @Override
     public void create() {
@@ -54,8 +59,14 @@ public class Main extends ApplicationAdapter {
         touchPos = new Vector2();
         dropSprites = new Array<>();
 
-        bucketRectangle = new Rectangle();
+        bucketRectangle = new Rectangle(); // Colliders
         dropRectangle = new Rectangle();
+
+        points = 0;
+        scoreText = new BitmapFont();
+        scoreText.setColor(1, 1, 1, 1); // Podemos poner el color que queramos
+        scoreText.setUseIntegerPositions(false);
+        scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
     }
     @Override
     public void resize(int width, int height) {
@@ -75,13 +86,13 @@ public class Main extends ApplicationAdapter {
         float speed = 4f;
         float delta = Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) { // No son las teclas normales, porque no van.
             bucketSprite.translateX(speed * delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             bucketSprite.translateX(-speed * delta);
         }
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched()) { // El ratón y el input de móvil supongo
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             viewport.unproject(touchPos);
             bucketSprite.setCenterX(touchPos.x);
@@ -107,10 +118,11 @@ public class Main extends ApplicationAdapter {
             dropSprite.translateY(-2f * delta);
             dropRectangle.set(dropSprite.getX(), dropSprite.getY(), dropWidth, dropHeight);
 
-            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i);
-            else if (bucketRectangle.overlaps(dropRectangle)) {
+            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i); // Sobrepasa el límite de la pantalla
+            else if (bucketRectangle.overlaps(dropRectangle)) { // Si choca con el cubo
                 dropSprites.removeIndex(i);
                 dropSound.play();
+                points++;
             }
         }
 
@@ -137,6 +149,8 @@ public class Main extends ApplicationAdapter {
             dropSprite.draw(batch);
         }
 
+        scoreText.draw(batch, "Points: " + points, 0.5f, worldHeight - 0.2f);
+
         batch.end();
     }
 
@@ -162,5 +176,6 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         bucketTexture.dispose();
+        scoreText.dispose();
     }
 }
