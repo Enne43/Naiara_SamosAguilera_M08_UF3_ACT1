@@ -156,6 +156,7 @@ public class Main extends ApplicationAdapter {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
+        batch.setColor(1,1,1,0.7f);
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         bucketSprite.draw(batch);
 
