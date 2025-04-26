@@ -44,7 +44,7 @@ public class Main extends ApplicationAdapter {
 
         // Cargamos las variables con nuestras imágenes y sonido deseados.
         bucketTexture = new Texture("ace.png");
-        backgroundTexture = new Texture("libgdx.png");
+        backgroundTexture = new Texture("ace_fondo.jpeg");
         dropTexture = new Texture("mera_mera_no_mi.png");
 
         bucketSprite = new Sprite(bucketTexture);
@@ -67,7 +67,15 @@ public class Main extends ApplicationAdapter {
         scoreText.setColor(1, 1, 1, 1); // Podemos poner el color que queramos
         scoreText.setUseIntegerPositions(false);
         scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
+
+        /*FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/one_piece.ttf"));
+FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+parameter.size = 48; 
+parameter.color = Color.WHITE;
+BitmapFont font = generator.generateFont(parameter);
+generator.dispose();*/
     }
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true); // true centers the camera
