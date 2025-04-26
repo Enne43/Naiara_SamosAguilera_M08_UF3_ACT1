@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -32,6 +33,7 @@ public class Main extends ApplicationAdapter {
     Rectangle bucketRectangle;
     Rectangle dropRectangle;
     BitmapFont scoreText;
+    FreeTypeFontGenerator generator;
     float dropTimer;
     int points;
 
@@ -63,17 +65,21 @@ public class Main extends ApplicationAdapter {
         dropRectangle = new Rectangle();
 
         points = 0;
-        scoreText = new BitmapFont();
-        scoreText.setColor(1, 1, 1, 1); // Podemos poner el color que queramos
-        scoreText.setUseIntegerPositions(false);
-        scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
 
-        /*FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/one_piece.ttf"));
-FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-parameter.size = 48; 
-parameter.color = Color.WHITE;
-BitmapFont font = generator.generateFont(parameter);
-generator.dispose();*/
+        try {
+            generator = new FreeTypeFontGenerator(Gdx.files.internal("one_piece.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.size = 24;
+            parameter.color = Color.WHITE;
+            scoreText = generator.generateFont(parameter);
+        } catch (Exception e) {
+            Gdx.app.error("FONT", "Error cargando fuente: " + e.getMessage());
+            scoreText = new BitmapFont();
+            scoreText.setColor(1, 1, 1, 1); // Podemos poner el color que queramos
+            scoreText.setUseIntegerPositions(false);
+            scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
+        }
+
     }
 
     @Override
@@ -157,7 +163,11 @@ generator.dispose();*/
             dropSprite.draw(batch);
         }
 
-        scoreText.draw(batch, "Points: " + points, 0.5f, worldHeight - 0.2f);
+        if (scoreText != null) {
+            scoreText.draw(batch, "Points: " + points, 0.5f, worldHeight - 0.2f);
+        } else {
+            Gdx.app.error("FONT", "No se pudo cargar la fuente.");
+        }
 
         batch.end();
     }
@@ -185,5 +195,6 @@ generator.dispose();*/
         batch.dispose();
         bucketTexture.dispose();
         scoreText.dispose();
+        generator.dispose();
     }
 }
