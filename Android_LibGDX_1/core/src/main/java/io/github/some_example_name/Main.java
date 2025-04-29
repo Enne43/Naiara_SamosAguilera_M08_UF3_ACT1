@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import jdk.internal.org.jline.utils.Log;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -37,6 +40,7 @@ public class Main extends ApplicationAdapter {
     float dropTimer;
     int points;
 
+    FileHandle fileHandle;
 
 
     @Override
@@ -67,19 +71,26 @@ public class Main extends ApplicationAdapter {
         points = 0;
 
         try {
-            generator = new FreeTypeFontGenerator(Gdx.files.internal("one_piece.ttf"));
+            //generator = new FreeTypeFontGenerator(Gdx.files.internal("one_piece.ttf"));
+            fileHandle = Gdx.files.internal("one_piece.ttf");
+
+            generator = new FreeTypeFontGenerator(fileHandle);
+
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 24;
             parameter.color = Color.WHITE;
+
             scoreText = generator.generateFont(parameter);
+            scoreText.setUseIntegerPositions(false); // IMPORTANTÍSIMO
+            generator.dispose();
+
         } catch (Exception e) {
             Gdx.app.error("FONT", "Error cargando fuente: " + e.getMessage());
             scoreText = new BitmapFont();
             scoreText.setColor(1, 1, 1, 1); // Podemos poner el color que queramos
             scoreText.setUseIntegerPositions(false);
-            scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
         }
-
+        scoreText.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight() * 10);
     }
 
     @Override
@@ -196,6 +207,5 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         bucketTexture.dispose();
         scoreText.dispose();
-        generator.dispose();
     }
 }
